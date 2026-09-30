@@ -1,22 +1,24 @@
+![Game Design Projects landing page](./docs/preview.png)
+
 # game-design-projects.github.io
 
 Landing page for the [game-design-projects](https://github.com/game-design-projects) GitHub org → **https://game-design-projects.github.io/**
 
-Built on the open-source [GitProfile](https://github.com/arifszn/gitprofile) (MIT). The repo list is pulled **live** from the GitHub API each time someone opens the page (public repos only, newest activity first), so there is nothing to maintain: create, rename or delete a repo and the page follows.
+A dependency-free static page (vanilla HTML/CSS/JS, no build step). The project list maintains itself:
 
-## Configure
+1. **Live** — on load, the browser reads the org's public repos from the GitHub API.
+2. **Snapshot fallback** — a workflow rewrites `data/repos.json` on every push to `main` and every 6 hours. If the live call fails (rate limit, offline) the page uses the snapshot.
+3. Only **public, non-archived** repos are listed (forks included); `.github` and this repo are hidden. Private repos are never requested.
 
-Everything lives in [`gitprofile.config.ts`](./gitprofile.config.ts) — theme, sort order, `limit`, `exclude.projects` to hide specific repos. Push to `main` and the [Deploy workflow](./.github/workflows/deploy.yml) republishes.
+A repo's **Play** button comes from its GitHub *Website* (`homepage`) field — set it to the itch.io URL and the button appears.
 
 ## Develop
 
 ```bash
-npm ci
-npm run dev     # http://localhost:5173
-npm run build   # type-check + production build into dist/
+python3 -m http.server 8765      # http://localhost:8765
+./scripts/build-data.sh          # refresh data/repos.json from the GitHub API
 ```
 
-## Notes
+Debug switches: `?offline=1` (force snapshot), `?theme=light|dark`, `?view=plates|index`.
 
-- Visitors' browsers call the unauthenticated GitHub API (60 req/h per IP); on rate limit the page shows an error with the reset time.
-- Licensed MIT, same as upstream (see [LICENSE](./LICENSE)).
+Deploy is `.github/workflows/deploy.yml` (GitHub Pages, workflow mode).

@@ -1,32 +1,150 @@
- <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game Design Projects</title>
+    <meta
+      name="description"
+      content="Small games, big experiments — Unity and web game prototypes from the game-design-projects org, playable on itch.io."
+    />
+    <meta property="og:title" content="Game Design Projects" />
+    <meta
+      property="og:description"
+      content="Small games, big experiments — Unity and web game prototypes, playable on itch.io."
+    />
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/333604587?s=512" />
+    <meta name="theme-color" content="#0c0c0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%- metaTitle %></title>
-
-    <meta property="title" content="<%- metaTitle %>" />
-    <meta name="description" content="<%- metaDescription %>" />
-
-    <meta itemprop="name" content="<%- metaTitle %>" />
-    <meta itemprop="description" content="<%- metaDescription %>" />
-    <meta itemprop="image" content="<%- metaImageURL %>" />
-
-    <meta property="og:title" content="<%- metaTitle %>" />
-    <meta property="og:description" content="<%- metaDescription %>" />
-    <meta property="og:image" content="<%- metaImageURL %>" />
-    <meta property="og:image:secure_url" content="<%- metaImageURL %>" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="<%- metaTitle %>" />
-    <meta name="twitter:description" content="<%- metaDescription %>" />
-    <meta name="twitter:image" content="<%- metaImageURL %>" />
-    <%- googleAnalyticsScript %>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/style.css" />
+    <script>
+      // Theme override (?theme=light|dark) applied before paint to avoid a flash.
+      try {
+        var t = new URLSearchParams(location.search).get('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <a class="skip" href="#library">Skip to the shelf</a>
+
+    <div class="rule rule--top" aria-hidden="true"></div>
+
+    <header class="masthead">
+      <div class="masthead__bar">
+        <p class="wordmark">
+          <span class="wordmark__mark" aria-hidden="true"></span>
+          Game&nbsp;Design&nbsp;Projects
+        </p>
+        <nav class="masthead__nav" aria-label="Elsewhere">
+          <a href="https://stevenli-phoenix-work.itch.io" target="_blank" rel="noreferrer">itch.io</a>
+          <a href="https://github.com/game-design-projects" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
+      </div>
+
+      <div class="hero">
+        <div class="hero__text">
+          <p class="eyebrow">A living index of game prototypes</p>
+          <h1 class="hero__title">
+            Small games,<br /><em>big experiments.</em>
+          </h1>
+          <p class="lede">
+            Unity prototypes, one-button experiments and a WebGPU detour. Nearly everything here
+            is playable in a browser, and new work shows up on this shelf the moment it is pushed.
+          </p>
+
+          <dl class="ledger" id="ledger">
+            <div class="ledger__item"><dt>Projects</dt><dd class="skel-text">—</dd></div>
+            <div class="ledger__item"><dt>Playable</dt><dd class="skel-text">—</dd></div>
+            <div class="ledger__item"><dt>Last push</dt><dd class="skel-text">—</dd></div>
+          </dl>
+
+          <p class="hero__links">
+            <a class="link-arrow link-arrow--accent" href="#library">Browse the shelf</a>
+            <a class="link-arrow" href="https://stevenli-phoenix-work.itch.io" target="_blank" rel="noreferrer">
+              Play on itch.io
+            </a>
+          </p>
+        </div>
+
+        <figure class="featured" id="featured">
+          <div class="featured__frame"><div class="featured__art skel-block"></div></div>
+          <figcaption class="featured__cap">
+            <span class="tag tag--latest">Latest</span>
+            <span class="featured__title skel-text">Loading the shelf…</span>
+          </figcaption>
+        </figure>
+      </div>
+    </header>
+
+    <main id="library" class="library">
+      <div class="section-head">
+        <h2>The shelf</h2>
+        <p class="section-head__note" id="count" aria-live="polite">Loading…</p>
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar__search">
+          <label class="sr" for="q">Search projects</label>
+          <input id="q" type="search" placeholder="search title, engine, topic…" autocomplete="off" spellcheck="false" />
+          <span class="toolbar__searchline" aria-hidden="true"></span>
+        </div>
+
+        <div class="toolbar__row">
+          <div class="chips" id="chips" role="group" aria-label="Filter projects"></div>
+          <div class="toolbar__controls">
+            <label class="field">
+              <span class="field__label">Sort</span>
+              <select id="sort">
+                <option value="updated">Recently updated</option>
+                <option value="name">Name A–Z</option>
+                <option value="stars">Most starred</option>
+              </select>
+            </label>
+            <div class="viewtoggle" role="group" aria-label="Layout">
+              <button type="button" id="view-plates" data-view="plates" aria-pressed="true">Plates</button>
+              <button type="button" id="view-index" data-view="index" aria-pressed="false">Index</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section id="shelf" class="shelf shelf--plates" aria-label="Projects"></section>
+
+      <p class="empty" id="empty" hidden>
+        <span id="empty-text">Nothing on the shelf matches that.</span>
+        <button type="button" id="clear" class="linkbtn">Clear filters</button>
+      </p>
+
+      <div class="notice" id="error" hidden>
+        <p class="notice__title">The shelf wouldn’t load.</p>
+        <p class="notice__body">
+          GitHub’s API and the local snapshot both refused. The projects are still there —
+          <a href="https://github.com/game-design-projects" target="_blank" rel="noreferrer">browse the org on GitHub</a>.
+        </p>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <p class="foot__source" id="source">Loading…</p>
+      <p class="foot__mid">This page reads the org straight from the GitHub API. Nothing to maintain by hand.</p>
+      <p class="foot__links">
+        <a href="https://github.com/game-design-projects/game-design-projects.github.io" target="_blank" rel="noreferrer">
+          Site source
+        </a>
+      </p>
+    </footer>
+
+    <script src="assets/art.js" defer></script>
+    <script src="assets/app.js" defer></script>
   </body>
 </html>
